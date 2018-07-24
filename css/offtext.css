@@ -1,0 +1,43 @@
+.font--rubik *{font-family: 'Rubik Mono One','NanumSquare', sans-serif !important; font-size:80px !important;}
+        
+.offtext {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  z-index: 0;
+}
+
+.inputs {
+  position: absolute;
+  z-index: 1;
+  bottom: 0px;
+  font-size: 20px !important;
+  text-align: center;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: helvetica, sans-serif;
+  bottom: 40px;
+  background: none;
+  border: 1px solid #000 !important;
+  color: #000;
+}
+
+.svgTxt, .offscreen-text {
+  width: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  display: block;
+  position: absolute;
+  margin: 0;
+}
+
+.offscreen-text {
+  text-align: center;
+  top: -9999px;
+}
+
+.svgTxt span {
+  position: absolute;
+}
