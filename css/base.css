@@ -1,0 +1,117 @@
+@charset "utf-8";
+/* 
+Noel's HTML5 Reset
+v1.1
+Last Updated: 2016-11-02
+Author: Young Min Kim(Edited HTML-Doctor)
+KaKao: Sophistic
+*/
+
+@import url('//fonts.googleapis.com/earlyaccess/nanumgothic.css');
+@import url('//cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css');
+
+html, body, div, span, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+abbr, address, cite, code,
+del, dfn, em, img, ins, kbd, q, samp,
+small, strong, sub, sup, var,
+b, i, dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section, summary,
+time, mark, audio, video, a{margin:0;  padding:0;  border:0; font-size:100%; vertical-align:baseline; background:transparent; -webkit-text-size-adjust:none; box-sizing:border-box; -webkit-box-sizing:border-box; -moz-box-sizing:border-box; font-family:'Nanum Gothic', 'NanumSquare', sans-serif; font-weight:normal; font-size:16px; letter-spacing:-0.25px}  
+img{display:block;}
+article,aside,details,figcaption,figure,
+footer,header,hgroup,menu,nav,section {display:block;}
+
+legend, caption{width:0;height:0;visibility:hidden;font-size:0;line-height:0;}
+a{font-style:normal; text-decoration:none; color:#000;}
+button{cursor:pointer; border:none; padding:0; }
+button::-moz-focus-inner, input::-moz-focus-inner {border:0; padding:0;}
+li,dd{list-style:none;}
+blockquote, q {quotes:none;}
+
+html{ font-smoothing:antialiased; -ms-touch-action:auto;}
+html,body{width:100%; height:100%;}
+
+table {border-collapse:collapse; border-spacing:0;   table-layout:fixed;}
+address, caption, em, cite {font-weight:normal; font-style:normal;}
+iframe{width:100%;vertical-align:middle;}
+
+section{display:table; width:100%;}
+caption{display:none;}
+figcaption{display:none}
+
+/* a 호환성 여부 판별
+a:link{ color:#000;  }
+a:visited{ color:#000;  }
+a:hover{ color:#000;  }
+a:focus 	{ color:#000;  }
+a:active	{ color:#000; } */
+
+input::-webkit-outer-spin-button,  
+input::-webkit-inner-spin-button {-webkit-appearance:none;  margin:0; }
+
+strong {font-weight: bold !important}
+
+textarea{width:100%;height:100px; resize:none; border:1px solid #e5e5e5;   padding:10px;  border-radius:0; -webkit-appearance:none;-moz-appearance:none;-ms-appearance:none;-o-appearance:none;appearance:none; cursor:pointer; }
+
+input[type="text"], input[type="number"],input[type="email"], input[type="search"],
+input[type="password"], input[type="date"], input[type="tel"], select{display:table-cell; vertical-align:middle;height:32px;line-height:25px; padding:0 5px;  background:#fff; border:1px solid #e5e5e5 ;-webkit-appearance:none;-moz-appearance:none;-ms-appearance:none;-o-appearance:none;appearance:none;  border-radius:0;}
+
+input[type="search"], input[type="submit"], input[type="button"] {border-radius:0; -webkit-border-radius:0; -moz-border-radius:0; -webkit-appearance:textfield;  -webkit-appearance:none;-moz-appearance:none;-ms-appearance:none;-o-appearance:none;appearance:none; }
+input[type="search"]::-webkit-search-results-decoration {-webkit-appearance:none;}
+
+input[type='checkbox'],input[type='radio'] {vertical-align:middle; margin-top:0; 0/IE8+9; } 
+
+input.disabled {background:#fff;}
+
+input[type=date]::-webkit-clear-button,
+input[type=date]::-webkit-inner-spin-button,
+input[type=date]::-webkit-calendar-picker-indicator {
+    display: none;
+}
+
+select::-ms-expand{display:none; }
+select{background:#fff; cursor: pointer; outline :none; overflow :hidden; text-overflow:''; border-radius:0; -webkit-appearance:none;-moz-appearance:none;-ms-appearance:none;-o-appearance:none;appearance:none; cursor:pointer; -webkit-appearance:none;-moz-appearance:none;-ms-appearance:none;-o-appearance:none;appearance:none; }
+textarea{width:100%;height:100px; resize:none; border:1px solid #e5e5e5;   padding:10px; }
+
+::-webkit-input-placeholder { /* WebKit, Blink, Edge */   color:#000 !important;}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */   color:#000 !important;   opacity:  1;}
+::-moz-placeholder { /* Mozilla Firefox 19+ */   color:#000 !important;   opacity:  1;}
+:-ms-input-placeholder { /* Internet Explorer 10-11 */   color:#000 !important;} 
+
+/* 웹에서만 사용할 것
+.mgt_5{margin-top:5px !important}
+.mgt_10{margin-top:10px !important}
+.mgt_20{margin-top:20px !important}
+.mgt_30{margin-top:30px !important}
+.mgt_40{margin-top:40px !important}
+.mgt_50{margin-top:50px !important}
+
+.pdt_5{padding-top:5px !important}
+.pdt_10{padding-top:10px !important}
+.pdt_20{padding-top:20px !important}
+.pdt_30{padding-top:30px !important}
+.pdt_40{padding-top:40px !important}
+.pdt_50{padding-top:50px !important}
+
+.mg_5{margin-bottom:5px !important} 
+.mg_10{margin-bottom:10px !important} 
+.mg_20{margin-bottom:20px !important}
+.mg_30{margin-bottom:30px !important}
+.mg_40{margin-bottom:40px !important}
+.mg_50{margin-bottom:50px !important} */
+
+.fr{float:right}
+.fl{float:left}
+.blind{position:absolute; top:-999999px; width:0; height:0; font-size:0; overflow:hidden;}
+
+.clearfix{overflow:hidden;}
+.clearfix:after{clear:both; display:block; content:'';}
+
+.bod{font-weight:bold;}
+.center{text-align: center;}
+/*End Noel's Reset*/
+

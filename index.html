@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <!-- META -->
+    <meta name="format-detection" content="telephone=no, address=no, email=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta content="시트콤" name="description">
+    <meta content="website" property="og:type">
+    <meta content="시트콤" property="og:title">
+    <meta content="시트콤" property="og:description">
+    <meta content="시트콤" name="keywords">
+    <meta content="Young Min Kim" name="author">
+    <!-- <meta content="./img/og.jpg" property="og:image"> -->
+    <meta content="index, follow" name="robots">
+    <title>시트콤</title> 
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="./css/base.css">
+    <link rel="stylesheet" type="text/css" href="./css/animate.css">
+    <link rel="stylesheet" type="text/css" href="./css/loading.css">
+    <link rel="stylesheet" type="text/css" href="./css/menu.css">
+    <link rel="stylesheet" type="text/css" href="./css/webgl.css">
+    <link rel="stylesheet" href="https://raw.githubusercontent.com/JohnBlazek/codepen-resources/master/3d-carousel/css/stylesheet.css">
+    <link rel="stylesheet" type="text/css" href="./css/slider.css">
+    <link rel="stylesheet" type="text/css" href="./css/gallery.css">
+    <link rel="stylesheet" type="text/css" href="./css/accordion.css">
+    <link rel="stylesheet" type="text/css" href="./css/history.css">    
+    <link rel="stylesheet" href="./css/chart.css">
+    <link rel="stylesheet" href="./css/gallery3d.css">
+    <style>
+      #mousepoint{position: fixed;touch-action: none;}
+    </style>
+    <!-- JS -->
+    <script src="./js/jquery-1.12.4.min.js"></script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
+    <script src="./js/ccapture.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.min.js"></script>
+    <script src="//raw.githubusercontent.com/JohnBlazek/codepen-resources/master/3d-carousel/js/libs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.1/TweenMax.min.js"></script>
+    <script src="./js/slider.js"></script>
+
+    <script src="./js/webgl.js"></script>
+
+    <!-- 임시로 막음 마우스 포인트는 아마도 .. sitcom intro page에 들어가면 좋을듯? 
+
+    https://github.com/spite/ccapture.js/blob/master/README.md
+    참고 사이트 ..
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/88/three.min.js"></script>
+    <script id="vertexShader" type="x-shader/x-vertex">
+        void main() {
+            gl_Position = vec4( position, 1.0 );
+        }
+    </script>
+    <script id="fragmentShader" type="x-shader/x-fragment">
+      uniform vec2 u_resolution;
+      uniform vec2 u_mouse;
+      uniform float u_time;
+      uniform sampler2D u_noise;
+      uniform sampler2D u_buffer;
+      uniform bool u_renderpass;
+        
+      const float blurMultiplier = 0.98;
+      const float circleSize = .25;
+      const float blurStrength = .6;
+      const float threshold = .5;
+      const float scale = 3.;
+      
+      #define PI 3.141592653589793
+      #define TAU 6.283185307179586
+
+      vec2 hash2(vec2 p)
+      {
+        vec2 o = texture2D( u_noise, (p+0.5)/256.0, -100.0 ).xy;
+        return o;
+      }
+      
+      vec3 hsb2rgb( in vec3 c ){
+        vec3 rgb = clamp(abs(mod(c.x*6.0+vec3(0.0,4.0,2.0),
+                                 6.0)-3.0)-1.0,
+                         0.0,
+                         1.0 );
+        rgb = rgb*rgb*(3.0-2.0*rgb);
+        return c.z * mix( vec3(1.0), rgb, c.y);
+      }
+      
+      vec3 domain(vec2 z){
+        return vec3(hsb2rgb(vec3(atan(z.y,z.x)/TAU,1.,1.)));
+      }
+      vec3 colour(vec2 z) {
+          return domain(z);
+      }
+
+      
+    #define pow2(x) (x * x)
+
+    const int samples = 8;
+    const float sigma = float(samples) * 0.25;
+
+    float gaussian(vec2 i) {
+        return 1.0 / (2.0 * PI * pow2(sigma)) * exp(-((pow2(i.x) + pow2(i.y)) / (2.0 * pow2(sigma))));
+    }
+
+    vec3 blur(sampler2D sp, vec2 uv, vec2 scale) {
+        vec3 col = vec3(0.0);
+        float accum = 0.0;
+        float weight;
+        vec2 offset;
+        
+        for (int x = -samples / 2; x < samples / 2; ++x) {
+            for (int y = -samples / 2; y < samples / 2; ++y) {
+                offset = vec2(x, y);
+                weight = gaussian(offset);
+                col += texture2D(sp, uv + scale * offset).rgb * weight;
+                accum += weight;
+            }
+        }
+        
+        return col / accum;
+    }
+      void main() {
+        vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / u_resolution.y;
+        uv *= scale;
+        vec2 mouse = u_mouse * scale;
+        
+        vec2 ps = vec2(1.0) / u_resolution.xy;
+        vec2 sample = gl_FragCoord.xy / u_resolution.xy;
+        // vec2 o = vec2(.5);
+        // float d = 1.05;
+        // sample = d * (sample - o);
+        // sample += o;
+        sample += vec2(sin((u_time+uv.y)*10.)*.002, -.008);
+        
+        vec3 fragcolour;
+        vec4 tex;
+        if(u_renderpass) {
+          tex = vec4(blur(u_buffer, sample, ps*blurStrength) * blurMultiplier, 1.);
+          float df = length(mouse - uv);
+          fragcolour = vec3( smoothstep( circleSize, 0., df ) );
+        } else {
+          tex = texture2D(u_buffer, sample, 2.) * .98;
+          tex = smoothstep(threshold - fwidth(tex.x), threshold, tex);
+        }
+        // vec4 tex = texture2D(u_buffer, sample, 2.) * .98;
+        
+        
+
+        gl_FragColor = vec4(fragcolour,1.0);
+        gl_FragColor += tex;
+        
+      }
+    </script>
+    <script src="./js/mousepoint.js"></script>
+
+    -->
+    <script type="text/javascript" src="./js/common.js"></script>
+
+    <script src="./js/chart.js"></script>
+    <!--[if lt IE 9]>
+        <script type="text/javascript" src="./js/html5shiv.js"></script>
+        <script type="text/javascript" src="./js/selectivizr-min.js"></script>
+        <script type="text/javascript" src="./js/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    
+
+    <div id="mousepoint" touch-action="none"></div>
+    <div class="loads">
+        <svg id="loading">
+            <g>
+                <path class="ld-l" fill="#39C0C4" d="M43.6,33.2h9.2V35H41.6V15.2h2V33.2z"/>
+                <path class="ld-o" fill="#39C0C4" d="M74.7,25.1c0,1.5-0.3,2.9-0.8,4.2c-0.5,1.3-1.2,2.4-2.2,3.3c-0.9,0.9-2,1.6-3.3,2.2
+                    c-1.3,0.5-2.6,0.8-4.1,0.8s-2.8-0.3-4.1-0.8c-1.3-0.5-2.4-1.2-3.3-2.2s-1.6-2-2.2-3.3C54.3,28,54,26.6,54,25.1s0.3-2.9,0.8-4.2
+                    c0.5-1.3,1.2-2.4,2.2-3.3s2-1.6,3.3-2.2c1.3-0.5,2.6-0.8,4.1-0.8s2.8,0.3,4.1,0.8c1.3,0.5,2.4,1.2,3.3,2.2c0.9,0.9,1.6,2,2.2,3.3
+                    C74.4,22.2,74.7,23.6,74.7,25.1z M72.5,25.1c0-1.2-0.2-2.3-0.6-3.3c-0.4-1-0.9-2-1.6-2.8c-0.7-0.8-1.6-1.4-2.6-1.9
+                    c-1-0.5-2.2-0.7-3.4-0.7c-1.3,0-2.4,0.2-3.4,0.7c-1,0.5-1.9,1.1-2.6,1.9c-0.7,0.8-1.3,1.7-1.6,2.8c-0.4,1-0.6,2.1-0.6,3.3
+                    c0,1.2,0.2,2.3,0.6,3.3c0.4,1,0.9,2,1.6,2.7c0.7,0.8,1.6,1.4,2.6,1.9c1,0.5,2.2,0.7,3.4,0.7c1.3,0,2.4-0.2,3.4-0.7
+                    c1-0.5,1.9-1.1,2.6-1.9c0.7-0.8,1.3-1.7,1.6-2.7C72.4,27.4,72.5,26.3,72.5,25.1z"/>
+                <path class="ld-a" fill="#39C0C4" d="M78.2,35H76l8.6-19.8h2L95.1,35h-2.2l-2.2-5.2H80.4L78.2,35z M81.1,27.9h8.7l-4.4-10.5L81.1,27.9z"/>
+                <path class="ld-d" fill="#39C0C4" d="M98,15.2h6.6c1.2,0,2.5,0.2,3.7,0.6c1.2,0.4,2.4,1,3.4,1.9c1,0.8,1.8,1.9,2.4,3.1s0.9,2.7,0.9,4.3
+                    c0,1.7-0.3,3.1-0.9,4.3s-1.4,2.3-2.4,3.1c-1,0.8-2.1,1.5-3.4,1.9c-1.2,0.4-2.5,0.6-3.7,0.6H98V15.2z M100,33.2h4
+                    c1.5,0,2.8-0.2,3.9-0.7c1.1-0.5,2-1.1,2.8-1.8c0.7-0.8,1.3-1.6,1.6-2.6s0.5-2,0.5-3c0-1-0.2-2-0.5-3c-0.4-1-0.9-1.8-1.6-2.6
+                    c-0.7-0.8-1.6-1.4-2.8-1.8c-1.1-0.5-2.4-0.7-3.9-0.7h-4V33.2z"/>
+                <path class="ld-i" fill="#39C0C4" d="M121.2,35h-2V15.2h2V35z"/>
+                <path class="ld-n" fill="#39C0C4" d="M140.5,32.1L140.5,32.1l0.1-16.9h2V35h-2.5l-11.5-17.1h-0.1V35h-2V15.2h2.5L140.5,32.1z"/>
+                <path class="ld-g" fill="#39C0C4" d="M162.9,18.8c-0.7-0.7-1.5-1.3-2.5-1.7c-1-0.4-2-0.6-3.3-0.6c-1.3,0-2.4,0.2-3.4,0.7s-1.9,1.1-2.6,1.9
+                    c-0.7,0.8-1.3,1.7-1.6,2.8c-0.4,1-0.6,2.1-0.6,3.3c0,1.2,0.2,2.3,0.6,3.3c0.4,1,0.9,2,1.6,2.7c0.7,0.8,1.6,1.4,2.6,1.9
+                    s2.2,0.7,3.4,0.7c1.1,0,2.1-0.1,3.1-0.4c0.9-0.2,1.7-0.5,2.3-0.9v-6h-4.6v-1.8h6.6v9c-1.1,0.7-2.2,1.1-3.5,1.5
+                    c-1.3,0.3-2.5,0.5-3.9,0.5c-1.5,0-2.9-0.3-4.1-0.8s-2.4-1.2-3.3-2.2c-0.9-0.9-1.6-2-2.1-3.3s-0.8-2.7-0.8-4.2s0.3-2.9,0.8-4.2
+                    c0.5-1.3,1.2-2.4,2.2-3.3c0.9-0.9,2-1.6,3.3-2.2c1.3-0.5,2.6-0.8,4.1-0.8c1.6,0,3,0.2,4.1,0.7s2.2,1.1,3,2L162.9,18.8z"/>
+            </g>
+        </svg>
+
+
+        <svg width='182px' height='182px' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="uil-ripple"><rect x="0" y="0" width="100" height="100" fill="none" class="bk"></rect><g> <animate attributeName="opacity" dur="4s" repeatCount="indefinite" begin="0s" keyTimes="0;0.33;1" values="1;1;0"></animate><circle cx="50" cy="50" r="40" stroke="#eeeeee" fill="none" stroke-width="2" stroke-linecap="round"><animate attributeName="r" dur="4s" repeatCount="indefinite" begin="0s" keyTimes="0;0.33;1" values="0;22;44"></animate></circle></g><g><animate attributeName="opacity" dur="4s" repeatCount="indefinite" begin="2s" keyTimes="0;0.33;1" values="1;1;0"></animate><circle cx="50" cy="50" r="40" stroke="#eeeeee" fill="none" stroke-width="2" stroke-linecap="round"><animate attributeName="r" dur="4s" repeatCount="indefinite" begin="2s" keyTimes="0;0.33;1" values="0;22;44"></animate></circle></g></svg>
+    </div>
+
+    <ul class="menu">
+      <li><a href="#" class="active">Sitcom</a></li>
+      <li><a href="#">Chart</a></li>
+      <li><a href="#">Gallery</a></li>
+      <li><a href="#">Member</a></li>
+      <!-- <li class="slider"></li> -->
+    </ul>
+
+    <div class="tabmenu on">
+        
+        <div id="contentContainer" class="trans3d"> 
+        <section id="carouselContainer" class="trans3d">
+            <figure id="item1" class="carouselItem trans3d"><div class="carouselItemInner trans3d"><img src="./img/album_1.jpg" alt=""></div></figure>
+            <figure id="item2" class="carouselItem trans3d"><div class="carouselItemInner trans3d"><img src="./img/album_2.jpg" alt=""></div></figure>
+            <figure id="item3" class="carouselItem trans3d"><div class="carouselItemInner trans3d"><img src="./img/album_3.jpg" alt=""></div></figure>
+            <figure id="item4" class="carouselItem trans3d"><div class="carouselItemInner trans3d"><img src="./img/album_4.jpg" alt=""></div></figure>
+            <figure id="item5" class="carouselItem trans3d"><div class="carouselItemInner trans3d"><img src="./img/album_5.jpg" alt=""></div></figure>
+            <figure id="item6" class="carouselItem trans3d"><div class="carouselItemInner trans3d"><img src="./img/album_6.jpg" alt=""></div></figure>
+            <figure id="item7" class="carouselItem trans3d"><div class="carouselItemInner trans3d"><img src="./img/album_7.jpg" alt=""></div></figure>
+            <figure id="item8" class="carouselItem trans3d"><div class="carouselItemInner trans3d"><img src="./img/album_8.jpg" alt=""></div></figure>
+            <figure id="item9" class="carouselItem trans3d"><div class="carouselItemInner trans3d"><img src="./img/album_9.jpg" alt=""></div></figure>
+        </section>
+        </div> 
+      
+      
+      
+
+        <h1>Timeline</h1>
+        
+        <div id="container"></div>    
+        <div id="menu">  
+          <button id="table">TABLE</button>
+          <button id="sphere">SPHERE</button>
+          <button id="helix">HELIX</button>
+          <button id="grid">GRID</button>
+        </div>
+        <<!-- div class="main-container">
+          <section id="timeline" class="timeline-outer">
+            <div class="container" id="content">
+              <div class="row">
+                <div class="col s12 m12 l12">
+                  
+                  <ul class="timeline">
+                    <li class="event" data-date="2018/Present">
+                      <h3>07.03</h3>
+                      <p>
+                        최운호 집들이 
+                      </p>
+                      <p>Since graduating from university, I have also undertaken responsibilities for designing a product for the company. The roles I have been given have provided the perfect opportunity to implement the skills I have gained throughout my higher
+                        education, as well as experiencing the running of a successful business.</p>
+                    </li>
+                    <li class="event" data-date="2017/Present">
+                      <h3>10.28</h3>
+                      <p>
+                        영민 결혼 
+                      </p>
+                      <p>Since graduating from university, I have also undertaken responsibilities for designing a product for the company. The roles I have been given have provided the perfect opportunity to implement the skills I have gained throughout my higher
+                        education, as well as experiencing the running of a successful business.</p>
+                    </li>
+                    <li class="event" data-date="2012/2015">
+                      <h3>Games & M BSc (Hons)</h3>
+                      <p>Throughout my degree I have gained expansive knowledge of informatics areas including Human Computer Interaction, Multimedia Design and Development, Program Analysis and Design For my final year project, I created a 2D Puzzler Game for iOS
+                        called 'Flat Ball' and received a first. I therefore hope to release this game and further develop it to add new levels and improve the features.
+                      </p>
+                    </li>
+                    <li class="event" data-date="2012/2015">
+                      <h3>1108 Studios</h3>
+                      <p>This is a small startup that a friend and I created to gain more skills and apply those I had learned while completing my diploma. Since its inception, as a front - end web developer I have advised, designed and built web solutions for numerous
+                        clients.</p>
+                    </li>
+                    <li class="event" data-date="2010/2012">
+                      <h3>IT Praional Diploma</h3>
+                      <p>This is where my interest in building things for interactive media began. During my first computing course I studied a range of core topics including multimedia design, database design, computer games development, computer networks and object
+                        oriented programming.</p>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div> -->
+
+
+    </div>
+    <div class="tabmenu">
+        <h1>About</h1>
+        <div class="container">
+            <div>
+              <canvas id="chars"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="tabmenu">
+        <h1>Gallery</h1>
+
+         <div class="gallery">            
+            <div><img src="./img/album_1.jpg" alt></div>
+            <div><img src="./img/album_2.jpg" alt></div>
+            <div><img src="./img/album_3.jpg" alt></div>
+            <div><img src="./img/album_4.jpg" alt></div>
+            <div><img src="./img/album_5.jpg" alt></div>
+            <div><img src="./img/album_6.jpg" alt></div>
+            <div><img src="./img/album_7.jpg" alt></div>
+            <div><img src="./img/album_8.jpg" alt></div>
+            <div><img src="./img/album_9.jpg" alt></div>
+
+        </div>
+    </div>
+    <div class="tabmenu">
+        <h1>Member</h1>
+        <div class="accordion">
+          <ul>
+            <li tabindex="1">
+              <div>
+                <a href="#none">
+                  <h2>Unho Choi</h2>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+                </a>
+              </div>
+            </li>
+            <li tabindex="2">
+              <div>
+                <a href="#none">
+                  <h2>Soobong Lee</h2>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+                </a>
+              </div>
+            </li>
+            <li tabindex="3">
+              <div>
+                <a href="#none">
+                  <h2>Sungmin Park</h2>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+                </a>
+              </div>
+            </li>
+            <li tabindex="4">
+              <div>
+                <a href="#none">
+                  <h2>SangHyun Sim</h2>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+                </a>
+              </div>
+            </li>
+            <li tabindex="5">
+              <div>
+                <a href="#none">
+                  <h2>SangPil Seo</h2>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+                </a>
+              </div>
+            </li>
+            <li tabindex="6">
+              <div>
+                <a href="#none">
+                  <h2>Yeongmin Kim</h2>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+                </a>
+              </div>
+            </li>
+            <li tabindex="7">
+              <div>
+                <a href="#none">
+                  <h2>Groggy Hyunsung</h2>
+                  <p>Dangerous</p>
+                  <i class="hyunsung">Finger Snap</i>
+                </a>
+              </div>
+            </li>
+            <li tabindex="8">
+              <div>
+                <a href="#none">
+                  <h2>WooSuck Jung</h2>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+                </a>
+              </div>
+            </li>
+            <li tabindex="9">
+              <div>
+                <a href="#none">
+                  <h2>Jaeil Ahn</h2>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+                </a>
+              </div>
+            </li>
+            <li tabindex="10">
+              <div>
+                <a href="#none">
+                  <h2>IlWhan Joo</h2>
+                  <p>Cellphone kill himself.</p>
+                </a>
+              </div>
+            </li>
+          </ul>
+        </div>
+    </div>
+
+    <div class="hyunsungSaid">
+        <p>HyunSung is comming back..</p>
+    </div>
+
+
+
+
+
+    <canvas id="c"></canvas>
+
+    <script id="shader-fs" type="x-shader/x-fragment">
+                #ifdef GL_ES
+                  precision highp float;
+                  #endif
+            void main(void) {
+             gl_FragColor = vec4(0.2, 0.3, 0.4, 1.0);
+            }
+        </script>
+
+    <script id="shader-vs" type="x-shader/x-vertex">
+        attribute vec3 vertexPosition;
+
+    uniform mat4 modelViewMatrix;
+    uniform mat4 perspectiveMatrix;
+
+    void main(void) {
+        gl_Position = perspectiveMatrix * modelViewMatrix * vec4(  vertexPosition, 1.0);
+    }
+    </script>
+
+    <script src="https://threejs.org/build/three.js"></script>
+    <script src="https://threejs.org/examples/js/libs/tween.min.js"></script>
+    <script src="https://threejs.org/examples/js/controls/TrackballControls.js"></script>
+    <script src="https://threejs.org/examples/js/renderers/CSS3DRenderer.js"></script>
+    <script src="./js/gallery3d.js"></script>
+    <script type="text/javascript">
+        $(document).on('ready', function(){
+
+            var chartStart = function(){
+              chartJs();
+            }
+
+            init();
+            animate();
+            $('body').css('background','transparent');
+
+            $('.menu li').on('click', function(){
+                var index = $('.menu li').index(this);
+                $(this).find('a').addClass('active').parent().siblings().find('a').removeClass('active')                
+                $('.tabmenu').eq(index).addClass('on').siblings().removeClass('on');
+
+            })
+
+            $('.menu li:nth-child(2)').on('click', function(){              
+                chartStart();
+            })
+
+            
+
+
+            $('#contentContainer').on('click', function(){
+                $(this).stop().hide()
+                $('#content').css('margin-top','50px')
+            })
+
+
+
+            $('.hyunsung').on('click', function(e){
+                e.preventDefault();
+
+                $('html,body').addClass('animated rubberBand')
+                $('html,body').css('overflow','hidden')
+                setTimeout(function(){
+                    $('#c').stop().fadeIn(500);
+                },2000)
+                setTimeout(function(){
+                    drawType = (drawType + 1) % 3;
+                    
+                },3500)
+
+                setTimeout(function(){$('.hyunsungSaid').addClass('on')},5000)
+
+            })
+
+
+        })
+
+        $(window).on('load', function(){
+            setTimeout(function(){
+                $('.loads').stop().slideUp(500)
+            },500)
+        })
+    </script>
+</body>
+
+</html>
+
+

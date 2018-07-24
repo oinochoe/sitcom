@@ -1,0 +1,153 @@
+
+
+/* hardware accelatator class */  
+  .trans3d
+  {
+    -webkit-transform-style: preserve-3d;
+    -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform-style: preserve-3d;
+    -moz-transform: translate3d(0, 0, 0);
+    -ms-transform-style:preserve-3d;
+    -ms-transform: translate3d(0, 0, 0);
+    transform-style:preserve-3d;
+    transform: translate3d(0, 0, 0);
+
+    /*-webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    -ms-backface-visibility:hidden;
+    backface-visibility:hidden;*/
+  }
+  
+  #contentContainer
+  {
+    z-index:9999;
+    position:absolute;
+    margin-left:-500px;
+    margin-top:-500px;
+    left:50%;
+    top:50%;
+    width:1000px;
+    height:1000px;
+  }
+  
+  #carouselContainer
+  {
+    position:absolute;
+    margin-left:-500px;
+    margin-top:-500px;
+    left:50%;
+    top:50%;
+    width:1000px;
+    height:1000px;
+  }
+  
+  .carouselItem
+  {
+    width:320px;
+    height:130px;
+    position:absolute;
+    left:50%;
+    top:50%;
+    margin-left:-160px;
+    margin-top:-90px;
+    visibility:hidden;
+  }
+  
+  .carouselItemInner
+  {
+    width:320px;
+    height:130px;
+    position:absolute;
+    color:aqua;
+    font-size:72px;
+    left:50%;
+    top:50%;
+    margin-left:-160px;
+    margin-top:-90px;
+    text-align:center;
+    
+  }
+
+  .carouselItemInner img{width:100%; display:block;}
+
+@media (max-width: 1024px) {
+
+  #contentContainer
+  {
+    display:none;
+    position:absolute;
+    margin-left:-250px;
+    margin-top:-250px;
+    width:500px;
+    height:500px;
+  }
+  
+  #carouselContainer
+  {
+    position:absolute;
+    margin-left:-250px;
+    margin-top:-250px;
+    width:500px;
+    height:500px;
+  }
+  
+  .carouselItem
+  {
+    width:160px;
+    height:75px;
+    margin-left:-80px;
+    margin-top:-45px;
+  }
+  
+  .carouselItemInner
+  {
+    width:160px;
+    height:75px;
+    font-size:42px;
+    margin-left:-80px;
+    margin-top:-45px;
+    
+  }
+
+
+}
+
+
+@media (max-width: 640px) {
+
+  #contentContainer
+  {
+    margin-left:-125px;
+    margin-top:-125px;
+    width:250px;
+    height:250px;
+  }
+  
+  #carouselContainer
+  {
+    margin-left:-125px;
+    margin-top:-125px;
+    width:250px;
+    height:250px;
+  }
+  
+  .carouselItem
+  {
+    width:80px;
+    height:33px;
+    margin-left:-40px;
+    margin-top:-23px;
+  }
+  
+  .carouselItemInner
+  {
+    width:80px;
+    height:33px;
+    margin-left:-40px;
+    margin-top:-23px;
+    
+  }
+
+
+
+}
