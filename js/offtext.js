@@ -31,6 +31,7 @@ const colors = [
   { main: '#2BB19B', shades: ['#4DBFAD', '#73CDBF', '#27A18D', '#1F8171'] },
   { main: '#70B984', shades: ['#7FBE90', '#98CBA6', '#68A87A', '#5E976E'] }
 ];
+
 const svg = selectSVG('svg');
 const text = document.getElementById('text');
 const offscreenText = document.getElementById('offscreen-text');

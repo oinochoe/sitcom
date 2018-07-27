@@ -1,15 +1,13 @@
-.font--rubik *{font-family: 'Rubik Mono One','NanumSquare', sans-serif !important; font-size:80px !important;}
+.font--rubik{width:100%; height:100%; overflow: hidden; }
+.font--rubik *{font-family: 'Rubik Mono One','NanumSquare', sans-serif !important;word-break: break-all; font-size:1.2em}
         
 .offtext {
   width: 100%;
   height: 100%;
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  z-index: 0;
 }
 
 .inputs {
+  width:80%;
   position: absolute;
   z-index: 1;
   bottom: 0px;
