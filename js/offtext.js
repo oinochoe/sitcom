@@ -41,7 +41,7 @@ let height = window.innerHeight;
 let textSize = 0;
 let textCenter = 0;
 const letters = [];
-const prompt = ['섹', '스', '왕', '최', '운', '호'];
+const prompt = ['시','트','콤','영','원','하','라'];
 let runPrompt = true;
 
 const resizePage = () => {
